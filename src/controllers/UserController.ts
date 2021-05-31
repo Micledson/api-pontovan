@@ -10,6 +10,7 @@ class UserController {
 
     try {
       const user = await userService.create(name, email, password);
+
       return response.status(201).json(user);
     } catch {
       return response.status(409).json("User already exists");
@@ -30,16 +31,27 @@ class UserController {
     return response.status(200).json(user);
   }
 
-  async update(request: Request, response: Response) {
-    const { id, email } = request.body;
+  async findUsers(request: Request, response: Response) {
+    const { name } = request.body;
 
     const userService = new UserService();
 
-    const user = await userService.update(id, email);
+    const users = await userService.findUsers(name);
 
-    delete user?.password;
+    return response.status(200).json(users);
+  }
 
-    return response.status(200).json(user);
+  async update(request: Request, response: Response) {
+    const { id, name, email, password } = request.body;
+    const userService = new UserService();
+
+    try {
+      const user = await userService.update(id, name, email, password);
+
+      return response.status(200).json(user);
+    } catch (err) {
+      return response.status(409).json(err.message);
+    }
   }
 
   async delete(request: Request, response: Response) {
@@ -49,7 +61,7 @@ class UserController {
 
     try {
       await userService.delete(id);
-      return response.status(200);
+      return response.sendStatus(200);
     } catch (err) {
       return response.status(409).json(`${err}`);
     }

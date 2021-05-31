@@ -8,6 +8,7 @@ const routes = Router();
 
 routes.post("/user", userController.create);
 routes.get("/user/:email", userController.store);
+routes.get("/users", userController.findUsers);
 routes.put("/user", userController.update);
 routes.delete("/user", userController.delete);
 

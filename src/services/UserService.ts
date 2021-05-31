@@ -13,26 +13,36 @@ class UserService {
 
     await this.userRepository.save(user);
 
+    delete user?.password;
+
     return user;
   }
 
   async store(email: string) {
     const user = await this.userRepository.findOne({ email });
 
-    console.log(user?.password);
+    delete user?.password;
 
     return user;
   }
 
-  async update(id: string, email: string) {
-    await this.userRepository
-      .createQueryBuilder()
-      .update(User)
-      .set({ email })
-      .where("id = :id", { id })
-      .execute();
+  async findUsers(name: string) {
+    const users = await this.userRepository.find({ name });
 
-    return await this.store(email);
+    return users;
+  }
+
+  async update(id: string, name: string, email: string, password?: string) {
+    const user = await this.userRepository.findOne(id);
+    user.name = name;
+    user.email = email;
+    user.password = password;
+
+    await this.userRepository.save(user);
+
+    delete user.password;
+
+    return user;
   }
 
   async delete(id: string) {
@@ -41,16 +51,9 @@ class UserService {
     if (!affected) {
       throw new Error("User not exists!");
     }
-  }
 
-  // async update(username: string, chat: boolean) {
-  //   await this.settingsRepository
-  //     .createQueryBuilder()
-  //     .update(Setting)
-  //     .set({ chat })
-  //     .where("username = :username", { username })
-  //     .execute();
-  // }
+    return affected;
+  }
 }
 
 export { UserService };
