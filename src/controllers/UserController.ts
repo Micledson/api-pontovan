@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 
+import bcrypt from "bcryptjs";
+
 import { UserService } from "../services/UserService";
 
 class UserController {
@@ -18,7 +20,7 @@ class UserController {
   }
 
   async store(request: Request, response: Response) {
-    const { email } = request.params;
+    let { email, password } = request.body;
 
     const userService = new UserService();
 
@@ -28,6 +30,14 @@ class UserController {
       return response.status(404).json({ message: "User not found" });
     }
 
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return response
+        .status(409)
+        .json({ message: "Email or Password incorrect!" });
+    }
+
+    delete user.password;
     return response.status(200).json(user);
   }
 
@@ -50,7 +60,7 @@ class UserController {
 
       return response.status(200).json(user);
     } catch (err) {
-      return response.status(409).json(err.message);
+      return response.status(400).json(err.message);
     }
   }
 

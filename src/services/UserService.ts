@@ -21,8 +21,6 @@ class UserService {
   async store(email: string) {
     const user = await this.userRepository.findOne({ email });
 
-    delete user?.password;
-
     return user;
   }
 
