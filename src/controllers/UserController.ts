@@ -1,8 +1,16 @@
 import { Request, Response } from "express";
 
-import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 import { UserService } from "../services/UserService";
+
+function generateToken(id: string) {
+  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+
+  return token;
+}
 
 class UserController {
   async create(request: Request, response: Response) {
@@ -19,26 +27,17 @@ class UserController {
     }
   }
 
-  async store(request: Request, response: Response) {
-    let { email, password } = request.body;
-
+  async login(request: Request, response: Response) {
+    const { email, password } = request.body;
     const userService = new UserService();
 
-    const user = await userService.store(email);
+    try {
+      const user = await userService.login(email, password);
 
-    if (!user) {
-      return response.status(404).json({ message: "User not found" });
+      return response.status(200).json({ user, token: generateToken(user.id) });
+    } catch (err) {
+      return response.status(409).json(`${err.message}`);
     }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      return response
-        .status(409)
-        .json({ message: "Email or Password incorrect!" });
-    }
-
-    delete user.password;
-    return response.status(200).json(user);
   }
 
   async findUsers(request: Request, response: Response) {
@@ -52,12 +51,13 @@ class UserController {
   }
 
   async update(request: Request, response: Response) {
-    const { id, name, email, password } = request.body;
-    const userService = new UserService();
+    const { name, email, password } = request.body;
+    const id = request.userId;
 
     try {
-      const user = await userService.update(id, name, email, password);
+      const userService = new UserService();
 
+      const user = await userService.update(id, name, email, password);
       return response.status(200).json(user);
     } catch (err) {
       return response.status(400).json(err.message);
@@ -65,7 +65,7 @@ class UserController {
   }
 
   async delete(request: Request, response: Response) {
-    const { id } = request.body;
+    const id = request.userId;
 
     const userService = new UserService();
 
