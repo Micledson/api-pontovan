@@ -9,4 +9,5 @@ const app = express();
 app.use(express.json());
 app.use(routes);
 
-app.listen(3333, () => console.log("http://localhost:3333"));
+const PORT = process.env.PORT;
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
