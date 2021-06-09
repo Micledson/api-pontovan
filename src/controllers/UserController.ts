@@ -21,7 +21,7 @@ class UserController {
     try {
       const user = await userService.create(name, email, password);
 
-      return response.status(201).json(user);
+      return response.status(201).json({ user, token: generateToken(user.id) });
     } catch {
       return response.status(409).json("User already exists");
     }
