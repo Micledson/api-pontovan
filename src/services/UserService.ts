@@ -44,6 +44,14 @@ class UserService {
     return user;
   }
 
+  async getUser(id: string) {
+    const user = await this.userRepository.findOne({ id });
+
+    delete user?.password;
+
+    return user;
+  }
+
   async findUsers(name: string) {
     const users = await this.userRepository.find({ name });
 
@@ -59,7 +67,7 @@ class UserService {
     user.email = email;
     user.password = password;
 
-    await this.userRepository.save(user).catch(function (value) {
+    await this.userRepository.save(user).catch(function (err) {
       throw new Error("Update failed");
     });
 
