@@ -4,12 +4,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
+import { Group } from "./Group";
+import { Messages } from "./Messages";
 
 @Entity("users")
 class User {
@@ -30,6 +35,9 @@ class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Messages, (messages) => messages.group)
+  messsages: Messages[];
 
   constructor() {
     if (!this.id) {
