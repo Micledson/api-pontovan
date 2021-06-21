@@ -1,10 +1,10 @@
 {
   "type": "mysql",
-  "host": "localhost",
+  "host": "us-cdbr-east-04.cleardb.com",
   "port": 3306,
-  "username": "root",
-  "password": "",
-  "database": "pontovan",
+  "username": "b2626ebf1736d6",
+  "password": "c4f22c97",
+  "database": "heroku_e5dd0c8e37c1f5a",
   "entities": ["src/models/*.ts"],
   "migrations": ["src/database/migrations/*.ts"],
   "cli": {
