@@ -10,6 +10,7 @@ const routes = Router();
 routes.post("/user", userController.create);
 routes.get("/user", userController.login);
 routes.get("/users", userController.findUsers);
+routes.get("/zoas", userController.zoas);
 
 routes.use(authMiddleware.authenticate);
 routes.put("/user/", userController.update);

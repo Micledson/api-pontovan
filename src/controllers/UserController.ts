@@ -13,6 +13,10 @@ function generateToken(id: string) {
 }
 
 class UserController {
+  async zoas(request: Request, response: Response) {
+    return response.json({ message: "boa família" });
+  }
+
   async create(request: Request, response: Response) {
     const { name, email, password } = request.body;
 
