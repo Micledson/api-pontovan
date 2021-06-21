@@ -15,7 +15,8 @@
   "homepage": "https://github.com/Micledson/api-pontovan#readme",
   "scripts": {
     "dev": "ts-node-dev --files src/index.ts",
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "start": "ts-node --files src/index"
   },
   "keywords": [],
   "dependencies": {
